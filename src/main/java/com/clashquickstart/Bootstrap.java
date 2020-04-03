@@ -19,7 +19,7 @@ import java.util.concurrent.ScheduledExecutorService;
 public class Bootstrap {
 
     public static void main(String[] args) throws BeanParseException, BeanConstructException {
-        IManager manager = BeanFactory.buildManager(BootstrapManager.class, "com/clashquickstart");
+        IManager manager = BeanFactory.buildManager(BootstrapManager.class, "com.clashquickstart");
         manager.init();
         manager.start();
         manager.join();
