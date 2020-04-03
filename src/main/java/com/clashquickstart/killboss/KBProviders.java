@@ -1,6 +1,9 @@
 package com.clashquickstart.killboss;
 
+import com.clash.bean.BeanFactory;
 import com.clash.bean.IBeanProvider;
+import com.clash.component.ComponentContainer;
+import com.clash.component.state.StateComponent;
 import com.clash.processor.ProcessorPipeline;
 import com.clash.synchronizer.CASSynchronizer;
 import com.clash.synchronizer.ISynchronizer;
@@ -65,6 +68,16 @@ public class KBProviders {
         @Override
         public String name() {
             return "Invoke";
+        }
+    }
+
+    public static class ComponentContianerProvider implements IBeanProvider<ComponentContainer> {
+
+        @Override
+        public ComponentContainer provide() {
+            ComponentContainer container = new ComponentContainer();
+
+            container.register(new StateComponent());
         }
     }
 }

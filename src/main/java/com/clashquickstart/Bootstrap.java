@@ -12,6 +12,7 @@ import com.clashquickstart.killboss.KBManager;
 public class Bootstrap {
 
     public static void main(String[] args) throws BeanParseException, BeanConstructException {
+        BeanFactory
         KBManager manager = BeanFactory.buildManager(KBManager.class, "com.clashquickstart.killboss");
         manager.init();
         manager.start();
