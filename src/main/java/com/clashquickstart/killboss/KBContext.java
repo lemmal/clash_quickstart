@@ -19,7 +19,7 @@ public class KBContext implements IContext {
     @BeanAutowire
     private ISynchronizer synchronizer;
     @BeanAutowire
-    private IPlayerContainer playerContainer;
+    private IPlayerContainer<?> playerContainer;
     @BeanAutowire
     private ComponentContainer componentContainer;
     @BeanAutowire("Join")
@@ -40,7 +40,7 @@ public class KBContext implements IContext {
     }
 
     @Override
-    public IPlayerContainer getPlayerContainer() {
+    public IPlayerContainer<?> getPlayerContainer() {
         return playerContainer;
     }
 

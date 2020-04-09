@@ -1,15 +1,17 @@
 package com.clashquickstart.killboss;
 
-import com.clash.bean.BeanFactory;
+import com.clash.bean.BeanConstructException;
 import com.clash.bean.IBeanProvider;
 import com.clash.component.ComponentContainer;
 import com.clash.component.state.StateComponent;
+import com.clash.component.state.StateRegister;
 import com.clash.processor.ProcessorPipeline;
 import com.clash.synchronizer.CASSynchronizer;
 import com.clash.synchronizer.ISynchronizer;
 import com.clashquickstart.killboss.processor.InvokeProcessor;
 import com.clashquickstart.killboss.processor.JoinProcessor;
 import com.clashquickstart.killboss.processor.LeaveProcessor;
+import com.clashquickstart.killboss.state.KBState;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -36,7 +38,11 @@ public class KBProviders {
 
         @Override
         public ProcessorPipeline provide() {
-            return new ProcessorPipeline().addLast(new JoinProcessor());
+            try {
+                return new ProcessorPipeline().addLast(KBBeanFactory.INSTANCE.getBean(JoinProcessor.class, ""));
+            } catch (BeanConstructException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         @Override
@@ -49,7 +55,11 @@ public class KBProviders {
 
         @Override
         public ProcessorPipeline provide() {
-            return new ProcessorPipeline().addLast(new LeaveProcessor());
+            try {
+                return new ProcessorPipeline().addLast(KBBeanFactory.INSTANCE.getBean(LeaveProcessor.class, ""));
+            } catch (BeanConstructException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         @Override
@@ -75,9 +85,21 @@ public class KBProviders {
 
         @Override
         public ComponentContainer provide() {
-            ComponentContainer container = new ComponentContainer();
+            try {
+                ComponentContainer container = new ComponentContainer();
+                container.register(KBBeanFactory.INSTANCE.getBean(StateComponent.class, ""));
+                return container;
+            } catch (BeanConstructException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
-            container.register(new StateComponent());
+    public static class StateRegisterProvider implements IBeanProvider<StateRegister> {
+
+        @Override
+        public StateRegister provide() {
+            return StateRegister.createFromEnum(KBState.class, KBState.WAIT);
         }
     }
 }
