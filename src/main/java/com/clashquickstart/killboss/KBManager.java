@@ -6,6 +6,7 @@ import com.clash.IResult;
 import com.clash.bean.BeanAutowire;
 import com.clash.bean.BeanConstruct;
 import com.clash.bean.BeanConsumer;
+import com.clash.param.IParam;
 
 @BeanConsumer
 @BeanConstruct(IManager.class)
@@ -29,17 +30,17 @@ public class KBManager implements IManager {
     }
 
     @Override
-    public IResult join() {
-        return context.getSynchronizer().submit(() -> context.getJoinPipeline().process());
+    public IResult join(IParam param) {
+        return context.getSynchronizer().submit(() -> context.getJoinPipeline().process(param));
     }
 
     @Override
-    public IResult leave() {
-        return context.getSynchronizer().submit(() -> context.getLeavePipeline().process());
+    public IResult leave(IParam param) {
+        return context.getSynchronizer().submit(() -> context.getLeavePipeline().process(param));
     }
 
     @Override
-    public IResult invoke() {
-        return context.getSynchronizer().submit(() -> context.getInvokePipeline().process());
+    public IResult invoke(IParam param) {
+        return context.getSynchronizer().submit(() -> context.getInvokePipeline().process(param));
     }
 }
