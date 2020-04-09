@@ -24,20 +24,20 @@ public class KBPlayerContainer implements IPlayerContainer<Long> {
 
     @Override
     public KBPlayer getPlayer(Long id) {
-        return null;
+        return id2Player.get(id);
     }
 
     @Override
     public IResult join(Long id) {
         KBPlayer player = new KBPlayer(id);
         id2Player.put(id, player);
-        return null;
+        return () -> true;
     }
 
     @Override
     public IResult leave(Long id) {
         id2Player.remove(id);
-        return null;
+        return () -> true;
     }
 
     @Override

@@ -28,6 +28,7 @@ public class KBContext implements IContext {
     private ProcessorPipeline leaveProcessor;
     @BeanAutowire("Invoke")
     private ProcessorPipeline invokeProcessor;
+    private int bossHp = KBConstants.BOSS_HP;
 
     @Override
     public ScheduledExecutorService getScheduler() {
@@ -62,5 +63,13 @@ public class KBContext implements IContext {
     @Override
     public ProcessorPipeline getInvokePipeline() {
         return invokeProcessor;
+    }
+
+    public int getBossHp() {
+        return bossHp;
+    }
+
+    public void decrBossHp(int num) {
+        bossHp = Math.max(bossHp - num, 0);
     }
 }

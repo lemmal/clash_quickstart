@@ -4,6 +4,7 @@ import com.clash.IContext;
 import com.clash.bean.BeanAutowire;
 import com.clash.bean.BeanConsumer;
 import com.clash.component.state.IState;
+import com.clash.logger.ClashLogger;
 
 @BeanConsumer
 public enum KBState implements IState {
@@ -17,6 +18,11 @@ public enum KBState implements IState {
         public long getStateSecond() {
             return LAST_FOREVER;
         }
+
+        @Override
+        public void onStateStart() {
+            ClashLogger.info("KBState : WAIT");
+        }
     },
     START {
         @Override
@@ -28,6 +34,11 @@ public enum KBState implements IState {
         public long getStateSecond() {
             return LAST_FOREVER;
         }
+
+        @Override
+        public void onStateStart() {
+            ClashLogger.info("KBState : START");
+        }
     },
     END {
         @Override
@@ -38,6 +49,11 @@ public enum KBState implements IState {
         @Override
         public long getStateSecond() {
             return 5;
+        }
+
+        @Override
+        public void onStateStart() {
+            ClashLogger.info("KBState : END");
         }
     }
     ;

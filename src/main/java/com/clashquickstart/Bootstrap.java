@@ -8,8 +8,8 @@ import com.clash.logger.ClashLogger;
 import com.clash.param.HashBasedParam;
 import com.clashquickstart.killboss.KBBeanFactory;
 import com.clashquickstart.killboss.KBManager;
-import com.clashquickstart.killboss.param.JoinParam;
-import com.clashquickstart.killboss.param.LeaveParam;
+import com.clashquickstart.killboss.param.KBJoinParam;
+import com.clashquickstart.killboss.param.KBLeaveParam;
 
 /**
  * 测试引导
@@ -22,10 +22,12 @@ public class Bootstrap {
         KBManager manager = KBBeanFactory.INSTANCE.getManager(KBManager.class);
         manager.init();
         manager.start();
-        manager.join(HashBasedParam.create(new JoinParam(10010)));
+        manager.join(HashBasedParam.create(new KBJoinParam(10010)));
+        manager.join(HashBasedParam.create(new KBJoinParam(20020)));
         IContext context = KBBeanFactory.INSTANCE.getBean(IContext.class, "");
         ClashLogger.info(String.valueOf(context.getPlayerContainer().getPlayerNumber()));
-        manager.leave(HashBasedParam.create(new LeaveParam(10010)));
+        manager.invoke(null);
+        manager.leave(HashBasedParam.create(new KBLeaveParam(10010)));
         ClashLogger.info(String.valueOf(context.getPlayerContainer().getPlayerNumber()));
         manager.destroy();
     }

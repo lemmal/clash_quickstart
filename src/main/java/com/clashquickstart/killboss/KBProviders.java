@@ -8,9 +8,7 @@ import com.clash.component.state.StateRegister;
 import com.clash.processor.ProcessorPipeline;
 import com.clash.synchronizer.CASSynchronizer;
 import com.clash.synchronizer.ISynchronizer;
-import com.clashquickstart.killboss.processor.InvokeProcessor;
-import com.clashquickstart.killboss.processor.JoinProcessor;
-import com.clashquickstart.killboss.processor.LeaveProcessor;
+import com.clashquickstart.killboss.processor.*;
 import com.clashquickstart.killboss.state.KBState;
 
 import java.util.concurrent.Executors;
@@ -39,7 +37,9 @@ public class KBProviders {
         @Override
         public ProcessorPipeline provide() {
             try {
-                return new ProcessorPipeline().addLast(KBBeanFactory.INSTANCE.getBean(JoinProcessor.class, ""));
+                return new ProcessorPipeline()
+                        .addLast(KBBeanFactory.INSTANCE.getBean(KBJoinProcessor.class, ""))
+                        .addLast(KBBeanFactory.INSTANCE.getBean(KBStartTrigger.class, ""));
             } catch (BeanConstructException e) {
                 throw new RuntimeException(e);
             }
@@ -56,7 +56,7 @@ public class KBProviders {
         @Override
         public ProcessorPipeline provide() {
             try {
-                return new ProcessorPipeline().addLast(KBBeanFactory.INSTANCE.getBean(LeaveProcessor.class, ""));
+                return new ProcessorPipeline().addLast(KBBeanFactory.INSTANCE.getBean(KBLeaveProcessor.class, ""));
             } catch (BeanConstructException e) {
                 throw new RuntimeException(e);
             }
@@ -72,7 +72,13 @@ public class KBProviders {
 
         @Override
         public ProcessorPipeline provide() {
-            return new ProcessorPipeline().addLast(new InvokeProcessor());
+            try {
+                return new ProcessorPipeline()
+                        .addLast(KBBeanFactory.INSTANCE.getBean(KBInvokeProcessor.class, ""))
+                        .addLast(KBBeanFactory.INSTANCE.getBean(KBEndTrigger.class, ""));
+            } catch (BeanConstructException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         @Override

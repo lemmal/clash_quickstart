@@ -16,17 +16,17 @@ public class KBManager implements IManager {
 
     @Override
     public void init() {
-
+        context.init();
     }
 
     @Override
     public void start() {
-
+        context.start();
     }
 
     @Override
     public void destroy() {
-
+        context.destroy();
     }
 
     @Override

@@ -8,20 +8,19 @@ import com.clash.bean.BeanConsumer;
 import com.clash.logger.ClashLogger;
 import com.clash.param.IParam;
 import com.clash.processor.IProcessor;
-import com.clashquickstart.killboss.param.JoinParam;
+import com.clashquickstart.killboss.param.KBLeaveParam;
 
 @BeanConsumer
-public class JoinProcessor implements IProcessor {
+public class KBLeaveProcessor implements IProcessor {
     @BeanAutowire
     private IContext context;
 
     @SuppressWarnings("unchecked")
     @Override
     public IResult process(IParam param) {
-        JoinParam p = param.toObject(JoinParam.class);
-        ClashLogger.info("process : join");
+        KBLeaveParam p = param.toObject(KBLeaveParam.class);
+        ClashLogger.info("process : leave");
         IPlayerContainer<Long> container = (IPlayerContainer<Long>) context.getPlayerContainer();
-        container.join(p.getUserId());
-        return null;
+        return container.leave(p.getUserId());
     }
 }

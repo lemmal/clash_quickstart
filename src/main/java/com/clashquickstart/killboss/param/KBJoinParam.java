@@ -1,13 +1,13 @@
 package com.clashquickstart.killboss.param;
 
-public class LeaveParam {
+public class KBJoinParam {
     private long userId;
 
-    public LeaveParam(long userId) {
+    public KBJoinParam(long userId) {
         this.userId = userId;
     }
 
-    public LeaveParam() {
+    public KBJoinParam() {
     }
 
     public long getUserId() {
