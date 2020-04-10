@@ -12,9 +12,7 @@ import com.clashquickstart.killboss.param.KBJoinParam;
 import com.clashquickstart.killboss.param.KBLeaveParam;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -24,6 +22,7 @@ import java.util.stream.Stream;
 public class Bootstrap {
 
     private static ExecutorService[] EXECUTORS = init();
+    private static CountDownLatch LATCH = new CountDownLatch(1);
 
     private static ExecutorService[] init() {
         AtomicInteger index = new AtomicInteger(0);
@@ -40,18 +39,20 @@ public class Bootstrap {
         KBManager manager = KBBeanFactory.INSTANCE.getManager(KBManager.class);
         manager.init();
         manager.start();
-        submit(1, () -> manager.join(HashBasedParam.create(new KBJoinParam(1))));
-        submit(2, () -> manager.join(HashBasedParam.create(new KBJoinParam(2))));
-        submit(1, () -> manager.invoke(HashBasedParam.createWithCommand(new KBHitParam(1, 100), KBCommands.HIT)));
-        submit(1, () -> manager.leave(HashBasedParam.create(new KBLeaveParam(1))));
-        Thread.sleep(2000);
-        manager.destroy();
+        CompletableFuture<Void> fc1 = CompletableFuture.runAsync(() -> manager.join(HashBasedParam.create(new KBJoinParam(1))), getExecutor(1));
+        fc1.thenRunAsync(() -> manager.invoke(HashBasedParam.createWithCommand(new KBHitParam(1, 100), KBCommands.HIT)), getExecutor(1));
+        fc1.thenRunAsync(() -> manager.leave(HashBasedParam.create(new KBLeaveParam(1))), getExecutor(1));
+        CompletableFuture<Void> fc2 = CompletableFuture.runAsync(() -> manager.join(HashBasedParam.create(new KBJoinParam(2))), getExecutor(2));
+        CompletableFuture.allOf(fc1, fc2).thenRun(() -> {
+            manager.destroy();
+            LATCH.countDown();
+        });
+        LATCH.await();
     }
 
-    private static void submit(long userId, Runnable runnable) {
+    private static ExecutorService getExecutor(long userId) {
         long index = userId % EXECUTORS.length;
-        EXECUTORS[(int) index].submit(runnable);
-
+        return EXECUTORS[(int) index];
     }
 
 }
