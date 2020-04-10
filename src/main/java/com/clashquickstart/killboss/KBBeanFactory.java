@@ -27,4 +27,8 @@ public enum KBBeanFactory {
     public <T> T getBean(Class<T> clazz, String name) throws BeanConstructException {
         return bf.consumeBean(clazz, name);
     }
+
+    public BeanFactory getBeanFactory() {
+        return bf;
+    }
 }

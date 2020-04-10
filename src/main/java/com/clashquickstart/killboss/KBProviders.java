@@ -1,14 +1,13 @@
 package com.clashquickstart.killboss;
 
-import com.clash.bean.BeanConstructException;
-import com.clash.bean.IBeanProvider;
+import com.clash.bean.*;
 import com.clash.component.ComponentContainer;
 import com.clash.component.state.StateComponent;
 import com.clash.component.state.StateRegister;
+import com.clash.processor.IProcessor;
 import com.clash.processor.ProcessorPipeline;
 import com.clash.synchronizer.CASSynchronizer;
 import com.clash.synchronizer.ISynchronizer;
-import com.clashquickstart.killboss.processor.*;
 import com.clashquickstart.killboss.state.KBState;
 
 import java.util.concurrent.Executors;
@@ -32,17 +31,18 @@ public class KBProviders {
         }
     }
 
+    @BeanConsumer
     public static class JoinPipelineProvider implements IBeanProvider<ProcessorPipeline> {
+        @BeanAutowire("Join")
+        private IProcessor join;
+        @BeanAutowire("Start")
+        private IProcessor start;
+        @BeanAutowire("PlayerNum")
+        private IProcessor playerNum;
 
         @Override
         public ProcessorPipeline provide() {
-            try {
-                return new ProcessorPipeline()
-                        .addLast(KBBeanFactory.INSTANCE.getBean(KBJoinProcessor.class, ""))
-                        .addLast(KBBeanFactory.INSTANCE.getBean(KBStartTrigger.class, ""));
-            } catch (BeanConstructException e) {
-                throw new RuntimeException(e);
-            }
+            return new ProcessorPipeline().addLast(join).addLast(start).addLast(playerNum);
         }
 
         @Override
@@ -51,15 +51,16 @@ public class KBProviders {
         }
     }
 
+    @BeanConsumer
     public static class LeavePipelineProvider implements IBeanProvider<ProcessorPipeline> {
+        @BeanAutowire("Leave")
+        private IProcessor leave;
+        @BeanAutowire("PlayerNum")
+        private IProcessor playerNum;
 
         @Override
         public ProcessorPipeline provide() {
-            try {
-                return new ProcessorPipeline().addLast(KBBeanFactory.INSTANCE.getBean(KBLeaveProcessor.class, ""));
-            } catch (BeanConstructException e) {
-                throw new RuntimeException(e);
-            }
+            return new ProcessorPipeline().addLast(leave).addLast(playerNum);
         }
 
         @Override
@@ -68,17 +69,16 @@ public class KBProviders {
         }
     }
 
+    @BeanConsumer
     public static class InvokePipelineProvider implements IBeanProvider<ProcessorPipeline> {
+        @BeanAutowire("Invoke")
+        private IProcessor invoke;
+        @BeanAutowire("End")
+        private IProcessor end;
 
         @Override
         public ProcessorPipeline provide() {
-            try {
-                return new ProcessorPipeline()
-                        .addLast(KBBeanFactory.INSTANCE.getBean(KBInvokeProcessor.class, ""))
-                        .addLast(KBBeanFactory.INSTANCE.getBean(KBEndTrigger.class, ""));
-            } catch (BeanConstructException e) {
-                throw new RuntimeException(e);
-            }
+            return new ProcessorPipeline().addLast(invoke).addLast(end);
         }
 
         @Override
