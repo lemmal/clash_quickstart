@@ -1,6 +1,9 @@
 package com.clashquickstart.killboss;
 
-import com.clash.bean.*;
+import com.clash.IContext;
+import com.clash.bean.BeanAutowire;
+import com.clash.bean.BeanConsumer;
+import com.clash.bean.IBeanProvider;
 import com.clash.component.ComponentContainer;
 import com.clash.component.state.StateComponent;
 import com.clash.component.state.StateRegister;
@@ -87,25 +90,17 @@ public class KBProviders {
         }
     }
 
+    @BeanConsumer
     public static class ComponentContianerProvider implements IBeanProvider<ComponentContainer> {
+        @BeanAutowire
+        private IContext context;
 
         @Override
         public ComponentContainer provide() {
-            try {
-                ComponentContainer container = new ComponentContainer();
-                container.register(KBBeanFactory.INSTANCE.getBean(StateComponent.class, ""));
-                return container;
-            } catch (BeanConstructException e) {
-                throw new RuntimeException(e);
-            }
+            ComponentContainer container = new ComponentContainer();
+            container.register(new StateComponent(context, StateRegister.createFromEnum(KBState.class, KBState.WAIT)));
+            return container;
         }
     }
 
-    public static class StateRegisterProvider implements IBeanProvider<StateRegister> {
-
-        @Override
-        public StateRegister provide() {
-            return StateRegister.createFromEnum(KBState.class, KBState.WAIT);
-        }
-    }
 }

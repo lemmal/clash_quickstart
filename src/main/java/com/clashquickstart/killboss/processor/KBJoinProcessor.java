@@ -21,7 +21,7 @@ public class KBJoinProcessor implements IProcessor {
     @Override
     public IResult process(IParam param) {
         KBJoinParam p = param.toObject(KBJoinParam.class);
-        ClashLogger.info("process : join");
+        ClashLogger.info("process : join " + p.getUserId());
         IPlayerContainer<Long> container = (IPlayerContainer<Long>) context.getPlayerContainer();
         return container.join(p.getUserId());
     }

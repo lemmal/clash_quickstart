@@ -5,7 +5,7 @@ import com.clash.IResult;
 import com.clash.bean.BeanAutowire;
 import com.clash.bean.BeanConstruct;
 import com.clash.bean.BeanConsumer;
-import com.clash.component.state.StateComponent;
+import com.clash.component.state.IStateComponent;
 import com.clash.handler.IInvokeHandler;
 import com.clash.handler.InvokeCommand;
 import com.clash.handler.InvokeHandlerParser;
@@ -41,7 +41,7 @@ public class KBInvokeProcessor extends CommandProcessor {
 
         @Override
         public IResult invoke(ICommandParam param) {
-            StateComponent component = context.getComponentContainer().getComponent(StateComponent.class);
+            IStateComponent component = context.getComponentContainer().getComponent(IStateComponent.class);
             if(component.getInfo().getStateId() != KBState.START.getStateId()) {
                 ClashLogger.info("invalid state : {}", KBState.values()[component.getInfo().getStateId()]);
                 return () -> false;

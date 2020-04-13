@@ -43,4 +43,5 @@ public class KBManager implements IManager {
     public IResult invoke(IParam param) {
         return context.getSynchronizer().submit(() -> context.getInvokePipeline().process(param));
     }
+
 }

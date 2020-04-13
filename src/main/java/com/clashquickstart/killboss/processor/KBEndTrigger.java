@@ -6,7 +6,6 @@ import com.clash.bean.BeanAutowire;
 import com.clash.bean.BeanConstruct;
 import com.clash.bean.BeanConsumer;
 import com.clash.component.state.IStateComponent;
-import com.clash.component.state.StateComponent;
 import com.clash.param.IParam;
 import com.clash.processor.IProcessor;
 import com.clashquickstart.killboss.KBContext;
@@ -21,7 +20,7 @@ public class KBEndTrigger implements IProcessor {
 
     @Override
     public IResult process(IParam param) {
-        IStateComponent component = context.getComponentContainer().getComponent(StateComponent.class);
+        IStateComponent component = context.getComponentContainer().getComponent(IStateComponent.class);
         int stateId = component.getInfo().getStateId();
         KBContext kbContext = KBUtil.toKBContext(context);
         if(stateId == KBState.START.getStateId() && kbContext.getBossHp() <= 0) {
