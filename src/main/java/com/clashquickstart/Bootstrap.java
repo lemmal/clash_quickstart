@@ -35,7 +35,6 @@ public class Bootstrap {
 
     public static void main(String[] args) throws BeanParseException, BeanConstructException, InterruptedException {
         KBBeanFactory.INSTANCE.init();
-        KBBeanFactory.INSTANCE.initInstance();
         KBManager manager = KBBeanFactory.INSTANCE.getManager(KBManager.class);
         manager.init();
         manager.start();

@@ -12,20 +12,13 @@ public enum KBBeanFactory {
 
     public void init() throws BeanParseException, BeanConstructException {
         if(null == bf) {
-            bf = BeanFactory.init("com.clashquickstart.killboss");
+            bf = BeanFactory.scan("com.clashquickstart.killboss");
+            bf.init();
         }
-    }
-
-    public void initInstance() throws BeanConstructException {
-        bf.initInstances();
     }
 
     public <T extends IManager> T getManager(Class<T> clazz) throws BeanConstructException {
         return bf.getManager(clazz);
-    }
-
-    public <T> T getBean(Class<T> clazz, String name) throws BeanConstructException {
-        return bf.consumeBean(clazz, name);
     }
 
     public BeanFactory getBeanFactory() {
